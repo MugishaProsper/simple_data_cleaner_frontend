@@ -35,10 +35,22 @@ const TransformationPanel = ({ data, setLoading, setError }) => {
       icon: BarChart3
     },
     {
-      id: 'log_transform',
+      id: 'log',
       label: 'Log Transform',
       description: 'Apply natural logarithm',
       icon: Settings
+    },
+    {
+      id: 'sqrt',
+      label: 'Square Root Transform',
+      description: 'Apply square root transformation',
+      icon: TrendingUp
+    },
+    {
+      id: 'scale',
+      label: 'Custom Scale',
+      description: 'Scale to custom range',
+      icon: BarChart3
     }
   ]
 
@@ -75,8 +87,9 @@ const TransformationPanel = ({ data, setLoading, setError }) => {
     try {
       const response = await axios.post(`${API_BASE_URL}/transform`, {
         file_id: data.file_id,
-        operation: transformationType,
-        columns: selectedColumns
+        columns: selectedColumns,
+        transformation_type: transformationType,
+        params: transformationType === 'scale' ? { feature_range: [0, 1] } : null
       })
 
       setTransformationResult(response.data)
@@ -195,12 +208,30 @@ const TransformationPanel = ({ data, setLoading, setError }) => {
                 </div>
               )}
 
-              {transformationType === 'log_transform' && (
+              {transformationType === 'log' && (
                 <div className="info-card">
                   <h4>Logarithmic Transformation</h4>
                   <p>Applies natural logarithm to reduce skewness:</p>
-                  <code>x_log = ln(x + 1)</code>
+                  <code>x_log = ln(x + shift)</code>
                   <p>Useful for right-skewed data and multiplicative relationships.</p>
+                </div>
+              )}
+
+              {transformationType === 'sqrt' && (
+                <div className="info-card">
+                  <h4>Square Root Transformation</h4>
+                  <p>Applies square root to reduce right skewness:</p>
+                  <code>x_sqrt = sqrt(x + shift)</code>
+                  <p>Useful for count data and reducing variance.</p>
+                </div>
+              )}
+
+              {transformationType === 'scale' && (
+                <div className="info-card">
+                  <h4>Custom Scaling</h4>
+                  <p>Scales data to custom range using Min-Max scaling:</p>
+                  <code>x_scaled = (x - x_min) / (x_max - x_min) * (max - min) + min</code>
+                  <p>Useful when you need specific value ranges.</p>
                 </div>
               )}
             </div>
@@ -214,15 +245,15 @@ const TransformationPanel = ({ data, setLoading, setError }) => {
             <div className="results-summary">
               <div className="result-item">
                 <span>Transformation applied:</span>
-                <span>{transformationResult.operation}</span>
+                <span>{transformationType}</span>
               </div>
               <div className="result-item">
                 <span>Columns transformed:</span>
-                <span>{transformationResult.columns.length}</span>
+                <span>{selectedColumns.length}</span>
               </div>
               <div className="result-item">
                 <span>Columns:</span>
-                <span>{transformationResult.columns.join(', ')}</span>
+                <span>{selectedColumns.join(', ')}</span>
               </div>
             </div>
 

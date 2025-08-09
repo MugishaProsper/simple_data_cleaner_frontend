@@ -33,12 +33,12 @@ const VisualizationPanel = ({ data, setLoading, setError }) => {
 
   const numericColumns = (data.columns || []).filter(col => {
     const dtype = data.data_types?.[col]
-    return dtype && (dtype.includes('int') || dtype.includes('float'))
+    return dtype && (dtype.includes('int') || dtype.includes('float') || dtype.includes('number'))
   })
 
   const categoricalColumns = (data.columns || []).filter(col => {
     const dtype = data.data_types?.[col]
-    return dtype && !dtype.includes('int') && !dtype.includes('float')
+    return dtype && !dtype.includes('int') && !dtype.includes('float') && !dtype.includes('number')
   })
 
   const handleGeneratePlot = async () => {
@@ -59,9 +59,9 @@ const VisualizationPanel = ({ data, setLoading, setError }) => {
       const response = await axios.post(`${API_BASE_URL}/visualize`, {
         file_id: data.file_id,
         plot_type: selectedPlotType,
-        x_axis: xAxis,
-        y_axis: yAxis,
-        hue: hue || null
+        x_column: xAxis,
+        y_column: yAxis,
+        title: `${selectedPlotType.charAt(0).toUpperCase() + selectedPlotType.slice(1)} Chart`
       })
 
       setGeneratedPlot(response.data.plot_url)
@@ -140,8 +140,8 @@ const VisualizationPanel = ({ data, setLoading, setError }) => {
                     onChange={(e) => setYAxis(e.target.value)}
                   >
                     <option value="">Select Y-axis column</option>
-                    {numericColumns.map(col => (
-                      <option key={col} value={col}>{col}</option>
+                    {(data.columns || []).map(col => (
+                      <option key={col} value={col}>{col} ({data.data_types?.[col] || 'unknown'})</option>
                     ))}
                   </select>
                 </div>
