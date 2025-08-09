@@ -56,7 +56,7 @@ const TransformationPanel = ({ data, setLoading, setError }) => {
 
   const numericColumns = (data.columns || []).filter(col => {
     const dtype = data.data_types?.[col]
-    return dtype && (dtype.includes('int') || dtype.includes('float'))
+    return dtype && (dtype.includes('int') || dtype.includes('float') || dtype.includes('number'))
   })
 
   const handleColumnToggle = (column) => {
@@ -166,7 +166,7 @@ const TransformationPanel = ({ data, setLoading, setError }) => {
               </div>
 
               <div className="column-grid">
-                {numericColumns.map(col => (
+                {numericColumns.length > 0 ? numericColumns.map(col => (
                   <label key={col} className="column-checkbox">
                     <input
                       type="checkbox"
@@ -174,14 +174,27 @@ const TransformationPanel = ({ data, setLoading, setError }) => {
                       onChange={() => handleColumnToggle(col)}
                     />
                     <span className="column-name">{col}</span>
-                    <span className="column-type">{data.data_types[col]}</span>
+                    <span className="column-type">{data.data_types?.[col] || 'unknown'}</span>
                   </label>
-                ))}
+                )) : (
+                  // Fallback: show all columns if no numeric columns detected
+                  (data.columns || []).map(col => (
+                    <label key={col} className="column-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={selectedColumns.includes(col)}
+                        onChange={() => handleColumnToggle(col)}
+                      />
+                      <span className="column-name">{col}</span>
+                      <span className="column-type">{data.data_types?.[col] || 'unknown'}</span>
+                    </label>
+                  ))
+                )}
               </div>
 
-              {numericColumns.length === 0 && (
+              {numericColumns.length === 0 && (data.columns || []).length > 0 && (
                 <p className="no-numeric-warning">
-                  No numeric columns found in your dataset
+                  No numeric columns automatically detected. All columns are shown - select carefully as transformations work best on numeric data.
                 </p>
               )}
             </div>
