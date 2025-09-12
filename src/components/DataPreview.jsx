@@ -56,58 +56,77 @@ const DataPreview = ({ data, onProceed }) => {
 
       <div className="preview-content">
         <div className="data-summary">
-          <h3>Dataset Summary</h3>
+          <h3>
+            <Database className="summary-icon" />
+            Dataset Summary
+          </h3>
           <div className="summary-grid">
-            <div className="summary-item">
-              <span className="summary-label">File:</span>
-              <span className="summary-value">{data.filename}</span>
+            <div className="summary-card">
+              <h4>File Information</h4>
+              <div className="summary-item">
+                <span className="summary-label">File:</span>
+                <span className="summary-value">{data.filename}</span>
+              </div>
+              <div className="summary-item">
+                <span className="summary-label">File ID:</span>
+                <span className="summary-value">{data.file_id}</span>
+              </div>
             </div>
-            <div className="summary-item">
-              <span className="summary-label">Rows:</span>
-              <span className="summary-value">{data.shape[0].toLocaleString()}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">Columns:</span>
-              <span className="summary-value">{data.shape[1]}</span>
-            </div>
-            <div className="summary-item">
-              <span className="summary-label">File ID:</span>
-              <span className="summary-value">{data.file_id}</span>
+            <div className="summary-card">
+              <h4>Dataset Dimensions</h4>
+              <div className="summary-item">
+                <span className="summary-label">Rows:</span>
+                <span className="summary-value">{data.shape[0].toLocaleString()}</span>
+              </div>
+              <div className="summary-item">
+                <span className="summary-label">Columns:</span>
+                <span className="summary-value">{data.shape[1]}</span>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="column-analysis">
-          <h3>Column Analysis</h3>
+          <h3>
+            <BarChart3 className="summary-icon" />
+            Column Analysis
+          </h3>
           <div className="column-grid">
             {data.columns.map(column => {
               const stats = getColumnStats(column)
               const dataType = data.data_types?.[column] || 'unknown'
               const missingCount = data.missing_values?.[column] || 0
+              const isNumeric = dataType.includes('int') || dataType.includes('float')
 
               return (
-                <div key={column} className="column-card">
+                <div key={column} className={`column-card ${isNumeric ? 'numeric-column' : 'categorical-column'}`}>
                   <div className="column-header">
                     <h4 className="column-name">{column}</h4>
-                    <span className={`column-type ${dataType.includes('int') || dataType.includes('float') ? 'numeric' : 'categorical'}`}>
+                    <span className={`column-type ${isNumeric ? 'numeric' : 'categorical'}`}>
                       {dataType}
                     </span>
                   </div>
                   <div className="column-stats">
                     <div className="stat-item">
                       <span>Unique values:</span>
-                      <span>{stats.uniqueCount}</span>
+                      <span className="stat-value">{stats.uniqueCount.toLocaleString()}</span>
                     </div>
                     <div className="stat-item">
                       <span>Missing values:</span>
-                      <span className={missingCount > 0 ? 'missing-values' : ''}>{missingCount}</span>
+                      <span className={`stat-value ${missingCount > 0 ? 'missing-values' : ''}`}>{missingCount.toLocaleString()}</span>
                     </div>
                     {missingCount > 0 && (
                       <div className="stat-item">
                         <span>Missing %:</span>
-                        <span className="missing-percentage">{((missingCount / data.shape[0]) * 100).toFixed(1)}%</span>
+                        <span className="stat-value missing-percentage">{((missingCount / data.shape[0]) * 100).toFixed(1)}%</span>
                       </div>
                     )}
+                    <div className="missing-bar">
+                      <div 
+                        className="missing-fill" 
+                        style={{ width: `${(missingCount / data.shape[0]) * 100}%` }}
+                      ></div>
+                    </div>
                   </div>
                 </div>
               )
@@ -117,9 +136,14 @@ const DataPreview = ({ data, onProceed }) => {
 
         <div className="data-table-section">
           <div className="table-header">
-            <h3>Data Sample</h3>
-            <div className="pagination-info">
-              Showing rows {startIndex + 1}-{Math.min(endIndex, data.preview.length)} of {data.preview.length}
+            <h3>
+              <Database className="summary-icon" />
+              Data Sample
+            </h3>
+            <div className="table-controls">
+              <div className="pagination-info">
+                Showing rows {startIndex + 1}-{Math.min(endIndex, data.preview.length)} of {data.preview.length.toLocaleString()}
+              </div>
             </div>
           </div>
 
@@ -145,13 +169,15 @@ const DataPreview = ({ data, onProceed }) => {
                     {data.columns.map(column => {
                       const value = row[column]
                       const isNull = value === null || value === undefined || value === ''
+                      const dataType = data.data_types?.[column] || 'unknown'
+                      const isNumeric = dataType.includes('int') || dataType.includes('float')
 
                       return (
-                        <td key={column} className={`data-cell ${isNull ? 'null-value' : ''}`}>
+                        <td key={column} className={`data-cell ${isNull ? 'null-value' : ''} ${isNumeric ? 'numeric' : 'categorical'}`}>
                           {isNull ? (
                             <span className="null-indicator">NULL</span>
                           ) : (
-                            String(value)
+                            <span className="cell-value">{String(value)}</span>
                           )}
                         </td>
                       )
