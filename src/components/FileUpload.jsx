@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Upload, FileText, AlertCircle } from 'lucide-react'
+import { Upload, FileText, AlertCircle, CheckCircle } from 'lucide-react'
 import axios from 'axios'
+import SkeletonLoader from './SkeletonLoader'
 
 const API_BASE_URL = 'http://localhost:8000'
 
@@ -81,7 +82,7 @@ const FileUpload = ({ onFileUpload, setLoading, setError }) => {
 
             {uploadStatus === 'uploading' && (
               <>
-                <div className="upload-spinner"></div>
+                <div className="upload-spinner" aria-hidden="true"></div>
                 <h3>Uploading...</h3>
                 <p>Please wait while we process your file</p>
               </>
@@ -89,7 +90,7 @@ const FileUpload = ({ onFileUpload, setLoading, setError }) => {
 
             {uploadStatus === 'success' && (
               <>
-                <FileText className="success-icon" />
+                <CheckCircle className="success-icon" aria-hidden="true" />
                 <h3>File uploaded successfully!</h3>
                 <p>Your data is ready for preview and cleaning</p>
               </>

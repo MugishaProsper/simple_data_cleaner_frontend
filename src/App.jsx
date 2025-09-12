@@ -42,17 +42,17 @@ function App() {
 
   return (
     <div className="app">
-      <header className="header">
+      <header className="header" role="banner">
         <div className="header-content">
           <h1 className="app-title">
-            <Database className="app-icon" />
+            <Database className="app-icon" aria-hidden="true" />
             Simple Data Cleaner
           </h1>
           <p className="app-subtitle">Upload, clean, visualize, and transform your data</p>
         </div>
       </header>
 
-      <nav className="step-navigation">
+      <nav className="step-navigation" role="navigation" aria-label="Data processing steps">
         {steps.map((step, index) => {
           const Icon = step.icon
           const isActive = currentStep === step.id
@@ -65,26 +65,30 @@ function App() {
               className={`step-button ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}`}
               onClick={() => handleStepChange(step.id)}
               disabled={!isCompleted && step.id !== 'upload'}
+              aria-current={isActive ? 'step' : undefined}
+              aria-label={`${step.label}${isCompleted ? ' (completed)' : ''}${isActive ? ' (current)' : ''}`}
             >
-              <Icon className="step-icon" />
+              <Icon className="step-icon" aria-hidden="true" />
               <span className="step-label">{step.label}</span>
-              {index < steps.length - 1 && <div className="step-connector" />}
+              {index < steps.length - 1 && <div className="step-connector" aria-hidden="true" />}
             </button>
           )
         })}
       </nav>
 
-      <main className="main-content">
+      <main className="main-content" role="main">
         {error && (
-          <div className="error-message">
+          <div className="error-message" role="alert" aria-live="polite">
             <p>{error}</p>
-            <button onClick={() => setError(null)}>Dismiss</button>
+            <button onClick={() => setError(null)} aria-label="Dismiss error message">
+              Dismiss
+            </button>
           </div>
         )}
 
         {loading && (
-          <div className="loading-overlay">
-            <div className="loading-spinner"></div>
+          <div className="loading-overlay" role="status" aria-live="polite" aria-label="Loading">
+            <div className="loading-spinner" aria-hidden="true"></div>
             <p>Processing...</p>
           </div>
         )}
@@ -130,7 +134,7 @@ function App() {
         )}
       </main>
 
-      <footer className="footer">
+      <footer className="footer" role="contentinfo">
         <p>&copy; 2024 Simple Data Cleaner. Built with React and FastAPI.</p>
       </footer>
     </div>
