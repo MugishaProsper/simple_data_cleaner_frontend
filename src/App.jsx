@@ -12,7 +12,11 @@ function App() {
   const [fileData, setFileData] = useState(null)
   const [cleanedData, setCleanedData] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
+
+  const getCurrentYear = () => {
+    return new Date().getFullYear()
+  }
 
   const steps = [
     { id: 'upload', label: 'Upload Data', icon: Upload },
@@ -135,7 +139,10 @@ function App() {
       </main>
 
       <footer className="footer" role="contentinfo">
-        <p>&copy; 2024 Simple Data Cleaner. Built with React and FastAPI.</p>
+        <p>&copy; {getCurrentYear()} Simple Data Cleaner. Built with React and FastAPI by Mugisha Prosper.</p>
+        <p>Contact Support: <a href="mailto:nelsonprox92@gmail.com">nelsonprox92@gmail.com</a></p>
+        <p>Check out our <a href="https://github.com/MugishaProsper/simple_data_cleaner_frontend">GitHub repository</a> for the source code and contribute to the project.</p>
+        <p>License: <a href="https://github.com/simpledatacleaner/simple-data-cleaner/blob/main/LICENSE">MIT License</a></p>
       </footer>
     </div>
   )
