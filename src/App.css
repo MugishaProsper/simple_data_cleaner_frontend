@@ -1,4 +1,9 @@
-@import './data-preview-styles.css';\n@import './skeleton-styles.css';\n@import './error-boundary-styles.css';\n\n/* CSS Custom Properties for consistent theming */
+@import './data-preview-styles.css';
+@import './skeleton-styles.css';
+@import './error-boundary-styles.css';
+@import 'tailwindcss';
+
+
 :root {
   /* Colors */
   --color-primary: #3b82f6;
