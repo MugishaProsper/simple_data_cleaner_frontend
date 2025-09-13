@@ -48,83 +48,90 @@ const DataPreview = ({ data, onProceed }) => {
   }
 
   return (
-    <div className="data-preview">
-      <div className="preview-header">
-        <h2>Data Preview</h2>
-        <p>Review your uploaded data before cleaning</p>
+    <div className="max-w-7xl mx-auto animate-fade-in-up">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-200 mb-2 tracking-tight">Data Preview</h2>
+        <p className="text-lg text-gray-600 dark:text-gray-400">Review your uploaded data before cleaning</p>
       </div>
 
-      <div className="preview-content">
-        <div className="data-summary">
-          <h3>
-            <Database className="summary-icon" />
+      <div className="space-y-8">
+        <div className="card p-8">
+          <h3 className="flex items-center gap-3 text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">
+            <Database className="w-6 h-6 text-primary-500" />
             Dataset Summary
           </h3>
-          <div className="summary-grid">
-            <div className="summary-card">
-              <h4>File Information</h4>
-              <div className="summary-item">
-                <span className="summary-label">File:</span>
-                <span className="summary-value">{data.filename}</span>
-              </div>
-              <div className="summary-item">
-                <span className="summary-label">File ID:</span>
-                <span className="summary-value">{data.file_id}</span>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="card-hover p-6">
+              <h4 className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-4">File Information</h4>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
+                  <span className="text-gray-600 dark:text-gray-400 font-medium">File:</span>
+                  <span className="text-gray-800 dark:text-gray-200 font-semibold font-mono">{data.filename}</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-gray-600 dark:text-gray-400 font-medium">File ID:</span>
+                  <span className="text-gray-800 dark:text-gray-200 font-semibold font-mono">{data.file_id}</span>
+                </div>
               </div>
             </div>
-            <div className="summary-card">
-              <h4>Dataset Dimensions</h4>
-              <div className="summary-item">
-                <span className="summary-label">Rows:</span>
-                <span className="summary-value">{data.shape[0].toLocaleString()}</span>
-              </div>
-              <div className="summary-item">
-                <span className="summary-label">Columns:</span>
-                <span className="summary-value">{data.shape[1]}</span>
+            <div className="card-hover p-6">
+              <h4 className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-4">Dataset Dimensions</h4>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
+                  <span className="text-gray-600 dark:text-gray-400 font-medium">Rows:</span>
+                  <span className="text-gray-800 dark:text-gray-200 font-semibold font-mono">{data.shape[0].toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-gray-600 dark:text-gray-400 font-medium">Columns:</span>
+                  <span className="text-gray-800 dark:text-gray-200 font-semibold font-mono">{data.shape[1]}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="column-analysis">
-          <h3>
-            <BarChart3 className="summary-icon" />
+        <div className="card p-8">
+          <h3 className="flex items-center gap-3 text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">
+            <BarChart3 className="w-6 h-6 text-primary-500" />
             Column Analysis
           </h3>
-          <div className="column-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {data.columns.map(column => {
               const stats = getColumnStats(column)
               const dataType = data.data_types?.[column] || 'unknown'
               const missingCount = data.missing_values?.[column] || 0
               const isNumeric = dataType.includes('int') || dataType.includes('float')
+              const missingPercentage = (missingCount / data.shape[0]) * 100
 
               return (
-                <div key={column} className={`column-card ${isNumeric ? 'numeric-column' : 'categorical-column'}`}>
-                  <div className="column-header">
-                    <h4 className="column-name">{column}</h4>
-                    <span className={`column-type ${isNumeric ? 'numeric' : 'categorical'}`}>
+                <div key={column} className={`card-hover p-4 ${isNumeric ? 'border-l-4 border-l-primary-500' : 'border-l-4 border-l-amber-500'}`}>
+                  <div className="flex justify-between items-center mb-3">
+                    <h4 className="text-base font-semibold text-gray-800 dark:text-gray-200 truncate">{column}</h4>
+                    <span className={isNumeric ? 'badge-numeric' : 'badge-categorical'}>
                       {dataType}
                     </span>
                   </div>
-                  <div className="column-stats">
-                    <div className="stat-item">
-                      <span>Unique values:</span>
-                      <span className="stat-value">{stats.uniqueCount.toLocaleString()}</span>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-gray-600 dark:text-gray-400 font-medium">Unique values:</span>
+                      <span className="text-gray-800 dark:text-gray-200 font-semibold font-mono">{stats.uniqueCount.toLocaleString()}</span>
                     </div>
-                    <div className="stat-item">
-                      <span>Missing values:</span>
-                      <span className={`stat-value ${missingCount > 0 ? 'missing-values' : ''}`}>{missingCount.toLocaleString()}</span>
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-gray-600 dark:text-gray-400 font-medium">Missing values:</span>
+                      <span className={`font-semibold font-mono ${missingCount > 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-800 dark:text-gray-200'}`}>
+                        {missingCount.toLocaleString()}
+                      </span>
                     </div>
                     {missingCount > 0 && (
-                      <div className="stat-item">
-                        <span>Missing %:</span>
-                        <span className="stat-value missing-percentage">{((missingCount / data.shape[0]) * 100).toFixed(1)}%</span>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gray-600 dark:text-gray-400 font-medium">Missing %:</span>
+                        <span className="text-amber-600 dark:text-amber-400 font-semibold font-mono">{missingPercentage.toFixed(1)}%</span>
                       </div>
                     )}
-                    <div className="missing-bar">
+                    <div className="w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-2">
                       <div 
-                        className="missing-fill" 
-                        style={{ width: `${(missingCount / data.shape[0]) * 100}%` }}
+                        className="h-full bg-gradient-to-r from-amber-500 to-red-500 transition-all duration-300 rounded-full" 
+                        style={{ width: `${missingPercentage}%` }}
                       ></div>
                     </div>
                   </div>
@@ -134,16 +141,14 @@ const DataPreview = ({ data, onProceed }) => {
           </div>
         </div>
 
-        <div className="data-table-section">
-          <div className="table-header">
-            <h3>
-              <Database className="summary-icon" />
+        <div className="card p-8">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-3">
+            <h3 className="flex items-center gap-3 text-xl font-semibold text-gray-800 dark:text-gray-200">
+              <Database className="w-6 h-6 text-primary-500" />
               Data Sample
             </h3>
-            <div className="table-controls">
-              <div className="pagination-info">
-                Showing rows {startIndex + 1}-{Math.min(endIndex, data.preview.length)} of {data.preview.length.toLocaleString()}
-              </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 font-mono">
+              Showing rows {startIndex + 1}-{Math.min(endIndex, data.preview.length)} of {data.preview.length.toLocaleString()}
             </div>
           </div>
 
@@ -151,12 +156,14 @@ const DataPreview = ({ data, onProceed }) => {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th className="row-number-header">#</th>
+                  <th className="w-16 text-center bg-gray-200 dark:bg-gray-600">#</th>
                   {data.columns.map(column => (
-                    <th key={column} className="column-header">
-                      <div className="column-header-content">
-                        <span className="column-name">{column}</span>
-                        <span className="column-type">{data.data_types?.[column] || 'unknown'}</span>
+                    <th key={column} className="min-w-[120px]">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-semibold text-gray-800 dark:text-gray-200">{column}</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400 font-normal uppercase tracking-wide">
+                          {data.data_types?.[column] || 'unknown'}
+                        </span>
                       </div>
                     </th>
                   ))}
@@ -165,7 +172,9 @@ const DataPreview = ({ data, onProceed }) => {
               <tbody>
                 {currentData.map((row, index) => (
                   <tr key={startIndex + index}>
-                    <td className="row-number">{startIndex + index + 1}</td>
+                    <td className="text-center bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 font-medium font-mono text-xs sticky left-0 z-10">
+                      {startIndex + index + 1}
+                    </td>
                     {data.columns.map(column => {
                       const value = row[column]
                       const isNull = value === null || value === undefined || value === ''
@@ -173,11 +182,13 @@ const DataPreview = ({ data, onProceed }) => {
                       const isNumeric = dataType.includes('int') || dataType.includes('float')
 
                       return (
-                        <td key={column} className={`data-cell ${isNull ? 'null-value' : ''} ${isNumeric ? 'numeric' : 'categorical'}`}>
+                        <td key={column} className={`${isNumeric ? 'numeric' : isNumeric ? 'datetime' : 'categorical'}`}>
                           {isNull ? (
                             <span className="null-indicator">NULL</span>
                           ) : (
-                            <span className="cell-value">{String(value)}</span>
+                            <span className="block max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap" title={String(value)}>
+                              {String(value)}
+                            </span>
                           )}
                         </td>
                       )
@@ -189,36 +200,36 @@ const DataPreview = ({ data, onProceed }) => {
           </div>
 
           {totalPages > 1 && (
-            <div className="table-pagination">
+            <div className="flex justify-between items-center mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
               <button
-                className="pagination-btn"
+                className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-sm hover:bg-gray-50 dark:hover:bg-gray-700 hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-primary-500"
                 onClick={handlePrevPage}
                 disabled={currentPage === 0}
               >
-                <ChevronLeft className="btn-icon" />
+                <ChevronLeft className="w-4 h-4" />
                 Previous
               </button>
 
-              <span className="pagination-info">
+              <span className="text-sm text-gray-600 dark:text-gray-400 font-mono">
                 Page {currentPage + 1} of {totalPages}
               </span>
 
               <button
-                className="pagination-btn"
+                className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-sm hover:bg-gray-50 dark:hover:bg-gray-700 hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none focus:outline-none focus:ring-2 focus:ring-primary-500"
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages - 1}
               >
                 Next
-                <ChevronRight className="btn-icon" />
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           )}
         </div>
       </div>
 
-      <div className="preview-actions">
+      <div className="flex justify-center mt-8">
         <button className="btn-primary" onClick={onProceed}>
-          <BarChart3 className="btn-icon" />
+          <BarChart3 className="w-4 h-4" />
           Proceed to Data Cleaning
         </button>
       </div>

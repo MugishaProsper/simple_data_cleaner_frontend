@@ -70,83 +70,107 @@ const CleaningOptions = ({ data, onDataClean, setLoading, setError }) => {
   }
 
   return (
-    <div className="cleaning-options">
-      <div className="cleaning-header">
-        <h2>Data Cleaning Options</h2>
-        <p>Configure how you want to clean your data</p>
+    <div className="max-w-7xl mx-auto animate-fade-in-up">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-200 mb-2 tracking-tight">Data Cleaning Options</h2>
+        <p className="text-lg text-gray-600 dark:text-gray-400">Configure how you want to clean your data</p>
       </div>
 
-      <div className="cleaning-content">
-        <div className="options-panel">
-          <h3>Cleaning Operations</h3>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="card p-8">
+          <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6 flex items-center gap-3">
+            <Settings className="w-6 h-6 text-primary-500" />
+            Cleaning Operations
+          </h3>
 
-          <div className="options-grid">
-            <div className="option-group">
-              <h4>Basic Cleaning</h4>
+          <div className="space-y-6">
+            <div>
+              <h4 className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-4">Basic Cleaning</h4>
+              <div className="space-y-4">
 
-              <label className="option-item">
-                <input
-                  type="checkbox"
-                  checked={cleaningOptions.fill_missing}
-                  onChange={(e) => handleOptionChange('fill_missing', e.target.checked)}
-                />
-                <span>Fill missing values</span>
-                <p>Replace missing values with appropriate defaults</p>
-              </label>
+                <label className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={cleaningOptions.fill_missing}
+                    onChange={(e) => handleOptionChange('fill_missing', e.target.checked)}
+                    className="mt-1 w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <div className="flex-1">
+                    <span className="font-medium text-gray-800 dark:text-gray-200">Fill missing values</span>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Replace missing values with appropriate defaults</p>
+                  </div>
+                </label>
 
-              <label className="option-item">
-                <input
-                  type="checkbox"
-                  checked={cleaningOptions.drop_duplicates}
-                  onChange={(e) => handleOptionChange('drop_duplicates', e.target.checked)}
-                />
-                <span>Remove duplicates</span>
-                <p>Remove duplicate rows from the dataset</p>
-              </label>
+                <label className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={cleaningOptions.drop_duplicates}
+                    onChange={(e) => handleOptionChange('drop_duplicates', e.target.checked)}
+                    className="mt-1 w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <div className="flex-1">
+                    <span className="font-medium text-gray-800 dark:text-gray-200">Remove duplicates</span>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Remove duplicate rows from the dataset</p>
+                  </div>
+                </label>
 
-              <label className="option-item">
-                <input
-                  type="checkbox"
-                  checked={cleaningOptions.strip_whitespace}
-                  onChange={(e) => handleOptionChange('strip_whitespace', e.target.checked)}
-                />
-                <span>Strip whitespace</span>
-                <p>Remove leading and trailing whitespace from text columns</p>
-              </label>
+                <label className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={cleaningOptions.strip_whitespace}
+                    onChange={(e) => handleOptionChange('strip_whitespace', e.target.checked)}
+                    className="mt-1 w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <div className="flex-1">
+                    <span className="font-medium text-gray-800 dark:text-gray-200">Strip whitespace</span>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Remove leading and trailing whitespace from text columns</p>
+                  </div>
+                </label>
+              </div>
             </div>
 
-            <div className="option-group">
-              <h4>Data Structure</h4>
+            <div>
+              <h4 className="text-base font-semibold text-gray-700 dark:text-gray-300 mb-4">Data Structure</h4>
+              <div className="space-y-4">
+                <label className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={cleaningOptions.standardize_columns}
+                    onChange={(e) => handleOptionChange('standardize_columns', e.target.checked)}
+                    className="mt-1 w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <div className="flex-1">
+                    <span className="font-medium text-gray-800 dark:text-gray-200">Standardize column names</span>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Convert column names to snake_case format</p>
+                  </div>
+                </label>
 
-              <label className="option-item">
-                <input
-                  type="checkbox"
-                  checked={cleaningOptions.standardize_columns}
-                  onChange={(e) => handleOptionChange('standardize_columns', e.target.checked)}
-                />
-                <span>Standardize column names</span>
-                <p>Convert column names to snake_case format</p>
-              </label>
+                <label className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={cleaningOptions.fix_datatypes}
+                    onChange={(e) => handleOptionChange('fix_datatypes', e.target.checked)}
+                    className="mt-1 w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <div className="flex-1">
+                    <span className="font-medium text-gray-800 dark:text-gray-200">Fix data types</span>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Automatically detect and convert data types</p>
+                  </div>
+                </label>
 
-              <label className="option-item">
-                <input
-                  type="checkbox"
-                  checked={cleaningOptions.fix_datatypes}
-                  onChange={(e) => handleOptionChange('fix_datatypes', e.target.checked)}
-                />
-                <span>Fix data types</span>
-                <p>Automatically detect and convert data types</p>
-              </label>
-
-              <label className="option-item">
-                <input
-                  type="checkbox"
-                  checked={cleaningOptions.fix_dates}
-                  onChange={(e) => handleOptionChange('fix_dates', e.target.checked)}
-                />
-                <span>Parse dates</span>
-                <p>Convert date-like strings to proper datetime format</p>
-              </label>
+                <label className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={cleaningOptions.fix_dates}
+                    onChange={(e) => handleOptionChange('fix_dates', e.target.checked)}
+                    className="mt-1 w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <div className="flex-1">
+                    <span className="font-medium text-gray-800 dark:text-gray-200">Parse dates</span>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Convert date-like strings to proper datetime format</p>
+                  </div>
+                </label>
+              </div>
             </div>
 
             <div className="option-group">
@@ -244,13 +268,13 @@ const CleaningOptions = ({ data, onDataClean, setLoading, setError }) => {
         )}
       </div>
 
-      <div className="cleaning-actions">
+      <div className="flex justify-center">
         <button
           className="btn-primary"
           onClick={handleCleanData}
           disabled={!Object.values(cleaningOptions).some(option => option === true)}
         >
-          <Settings className="btn-icon" />
+          <Settings className="w-4 h-4" />
           Clean Data
         </button>
       </div>
