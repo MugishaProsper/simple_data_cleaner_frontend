@@ -6,9 +6,10 @@ import CleaningOptions from './components/CleaningOptions'
 import VisualizationPanel from './components/VisualizationPanel'
 import TransformationPanel from './components/TransformationPanel'
 import { Upload, Database, BarChart3, Settings, Download } from 'lucide-react'
+import useDataStore from './store/useDataStore'
 
 function App() {
-  const [currentStep, setCurrentStep] = useState('upload')
+  const { currentStep, setCurrentStep } = useDataStore()
   const [fileData, setFileData] = useState(null)
   const [cleanedData, setCleanedData] = useState(null)
   const [loading, setLoading] = useState(false)
